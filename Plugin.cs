@@ -58,7 +58,7 @@ public sealed class Plugin : IDalamudPlugin
 
         this.controller = new QuestWizardController();
         this.helpWindow = new HelpWindow();
-        this.mainWindow = new MainWindow(this.controller, this.OpenDebugUi, this.OpenHelpUi);
+        this.mainWindow = new MainWindow(this.controller, this.OpenDebugUi, this.OpenHelpUi, this.OpenConfigUi);
         this.configWindow = new ConfigWindow(this.controller);
         this.questDebugWindow = new QuestDebugWindow(this.controller);
 
@@ -80,11 +80,11 @@ public sealed class Plugin : IDalamudPlugin
     private void OnCommand(string command, string arguments)
         => this.OpenMainUi();
 
-    private void DrawUi() => this.windowSystem.Draw();
-    private void OpenMainUi() => this.mainWindow.IsOpen = true;
-    private void OpenConfigUi() => this.configWindow.IsOpen = true;
-    private void OpenDebugUi() => this.questDebugWindow.IsOpen = true;
-    private void OpenHelpUi() => this.helpWindow.IsOpen = true;
+    internal void DrawUi() => this.windowSystem.Draw();
+    internal void OpenMainUi() => this.mainWindow.IsOpen = true;
+    internal void OpenConfigUi() => this.configWindow.IsOpen = true;
+    internal void OpenDebugUi() => this.questDebugWindow.IsOpen = true;
+    internal void OpenHelpUi() => this.helpWindow.IsOpen = true;
 
     public void Dispose()
     {

@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
-using Dalamud.Interface.Windowing;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Windowing;
 using QuestionableJsonBuilder.Models;
 using QuestionableJsonBuilder.Services;
 
@@ -378,6 +379,7 @@ public sealed class MainWindow : Window
     private readonly Configuration configuration;
     private readonly Action? openDebugUi;
     private readonly Action? openHelpUi;
+    private readonly Action? openConfigUi;
 
     private string questSearchText = string.Empty;
     private int selectedQuestIndex = -1;
@@ -385,17 +387,18 @@ public sealed class MainWindow : Window
     private readonly Dictionary<string, string> comboSearch = new();
 
     public MainWindow(QuestWizardController controller)
-        : this(controller, null, null)
+        : this(controller, null, null, null)
     {
     }
 
-    public MainWindow(QuestWizardController controller, Action? openDebugUi, Action? openHelpUi)
+    public MainWindow(QuestWizardController controller, Action? openDebugUi, Action? openHelpUi, Action? openConfigUi)
         : base("Questionable JSON Builder")
     {
         this.controller = controller;
         this.configuration = Plugin.Configuration;
         this.openDebugUi = openDebugUi;
         this.openHelpUi = openHelpUi;
+        this.openConfigUi = openConfigUi;
 
         this.Size = new Vector2(1180, 860);
         this.SizeCondition = ImGuiCond.FirstUseEver;
@@ -404,6 +407,20 @@ public sealed class MainWindow : Window
             MinimumSize = new Vector2(920, 680),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
         };
+
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.Cog,
+            IconOffset = new(1.5f, 1),
+            Click = _ => openConfigUi?.Invoke(),
+            Priority = int.MinValue,
+            ShowTooltip = () =>
+            {
+                ImGui.BeginTooltip();
+                ImGui.Text("Open Configuration");
+                ImGui.EndTooltip();
+            }
+        });
     }
 
     public override void Draw()
